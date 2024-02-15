@@ -13,9 +13,11 @@ namespace TFL_lab1.Сlasses
     {
         FormCompiler form;
         string currentFile = "";
+        bool fileChanged = false;
         public File(FormCompiler form)
         {
             this.form = form;
+            this.form.InputTextBox.TextChanged += new EventHandler((sender, earg) => { fileChanged = true; });
         }
         public void CreateFile()
         {
@@ -49,7 +51,8 @@ namespace TFL_lab1.Сlasses
         }
         public void SaveFile()
         {
-            using(StreamWriter streamWriter = new StreamWriter(currentFile))
+            fileChanged = false;
+            using (StreamWriter streamWriter = new StreamWriter(currentFile))
             {
                 streamWriter.Write(form.InputTextBox.Text);
             }
@@ -73,7 +76,29 @@ namespace TFL_lab1.Сlasses
         }
         public void Exit()
         {
-            Application.Exit();
+            if(CheckClose())
+                Application.Exit();
+        }
+        internal bool CheckClose()
+        {
+            if (fileChanged)
+            {
+                DialogResult result = MessageBox.Show("Сохранить изменения в файле?", "Неприменённые изменения", MessageBoxButtons.YesNoCancel);
+                if (result == DialogResult.Yes)
+                {
+                    SaveFile();
+                    return true;
+                }
+                else if (result == DialogResult.No)
+                {
+                    fileChanged = false;
+                    return true;
+                }
+                else
+                    return false;
+            }
+            else
+                return true;
         }
     }
 }

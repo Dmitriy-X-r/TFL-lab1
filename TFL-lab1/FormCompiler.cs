@@ -28,6 +28,7 @@ namespace TFL_lab1
             InitializeComponent();
             file = new File(this);
             correction = new Correction(this);
+            reference = new Reference();
         }
 
         private void CreateToolStripMenuItem_Click(object sender, EventArgs e)
@@ -88,6 +89,18 @@ namespace TFL_lab1
         private void SelectAllToolStripMenuItem_Click(object sender, EventArgs e)
         {
             correction.SelectAll();
+        }
+
+        private void FormCompiler_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (e.CloseReason == CloseReason.UserClosing)
+                e.Cancel = true;
+            file.Exit();
+        }
+
+        private void CallingHelpToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            reference.CallingHelp();
         }
     }
 }

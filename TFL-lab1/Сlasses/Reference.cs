@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using TFL_lab1.Interfaces;
 
 namespace TFL_lab1.Сlasses
@@ -16,7 +17,8 @@ namespace TFL_lab1.Сlasses
 
         public void CallingHelp()
         {
-            throw new NotImplementedException();
+            FormHelp form = new FormHelp();
+            form.Show();
         }
     }
 }
