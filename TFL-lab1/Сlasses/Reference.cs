@@ -12,7 +12,8 @@ namespace TFL_lab1.Сlasses
     {
         public void AboutProgram()
         {
-            throw new NotImplementedException();
+            FormAboutProgram form = new FormAboutProgram();
+            form.Show();
         }
 
         public void CallingHelp()

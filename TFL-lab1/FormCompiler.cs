@@ -102,5 +102,10 @@ namespace TFL_lab1
         {
             reference.CallingHelp();
         }
+
+        private void AboutProgramToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            reference.AboutProgram();
+        }
     }
 }

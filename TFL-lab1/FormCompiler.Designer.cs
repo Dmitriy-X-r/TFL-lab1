@@ -289,6 +289,7 @@
             this.AboutProgramToolStripMenuItem.Name = "AboutProgramToolStripMenuItem";
             this.AboutProgramToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.AboutProgramToolStripMenuItem.Text = "О программе";
+            this.AboutProgramToolStripMenuItem.Click += new System.EventHandler(this.AboutProgramToolStripMenuItem_Click);
             // 
             // splitContainer1
             // 
