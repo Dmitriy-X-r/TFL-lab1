@@ -10,19 +10,15 @@ using System.Windows.Forms;
 
 namespace TFL_lab1
 {
-    public partial class Form1 : Form
+    public partial class FormCompiler : Form
     {
-        public Form1()
+        public string filePath;
+        public FormCompiler()
         {
             InitializeComponent();
         }
 
-        private void текстToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void классификацToolStripMenuItem_Click(object sender, EventArgs e)
+        private void создатьToolStripMenuItem_Click(object sender, EventArgs e)
         {
 
         }
