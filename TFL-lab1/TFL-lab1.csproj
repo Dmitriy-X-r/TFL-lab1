@@ -46,6 +46,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Enums\StructStepEnum.cs" />
     <Compile Include="FormAboutProgram.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -67,11 +68,14 @@
     <Compile Include="Interfaces\ICorrection.cs" />
     <Compile Include="Interfaces\IFile.cs" />
     <Compile Include="Interfaces\IReference.cs" />
+    <Compile Include="Interfaces\IScaner.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Enums\StructScanEnum.cs" />
     <Compile Include="Сlasses\Correction.cs" />
     <Compile Include="Сlasses\File.cs" />
     <Compile Include="Сlasses\Reference.cs" />
+    <Compile Include="Сlasses\Scaner.cs" />
     <EmbeddedResource Include="FormAboutProgram.resx">
       <DependentUpon>FormAboutProgram.cs</DependentUpon>
     </EmbeddedResource>
