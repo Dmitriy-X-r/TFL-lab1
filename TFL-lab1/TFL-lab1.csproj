@@ -133,6 +133,10 @@
   <ItemGroup>
     <None Include="Resources\открыть файл2.png" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Content Include="Resources\Диаграмма.PNG" />
+    <Content Include="Resources\Пример1.PNG" />
+    <Content Include="Resources\Пример2.PNG" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
