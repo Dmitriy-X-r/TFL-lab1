@@ -53,7 +53,7 @@ namespace TFL_lab1
 
         private void SaveAsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            file.SaveFileAs();
+            file.SaveFileAs();м
         }
 
         private void ExitToolStripMenuItem_Click(object sender, EventArgs e)
