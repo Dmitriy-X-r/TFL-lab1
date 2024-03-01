@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -23,12 +24,16 @@ namespace TFL_lab1
         IReference reference;
         internal IReference Reference { get => reference; }
 
+        IScaner scaner;
+        internal IScaner Scaner { get => scaner; }
+
         public FormCompiler()
         {
             InitializeComponent();
-            file = new File(this);
+            file = new TFL_lab1.Сlasses.File(this);
             correction = new Correction(this);
             reference = new Reference();
+            scaner = new Scaner(this);
         }
 
         private void CreateToolStripMenuItem_Click(object sender, EventArgs e)
@@ -106,6 +111,26 @@ namespace TFL_lab1
         private void AboutProgramToolStripMenuItem_Click(object sender, EventArgs e)
         {
             reference.AboutProgram();
+        }
+
+        private void FormCompiler_DragEnter(object sender, DragEventArgs e)
+        {
+            // Проверка, что перетаскивается файл             if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            {
+                e.Effect = DragDropEffects.Copy;
+            }
+        }
+        private void FormCompiler_DragDrop(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            {
+                e.Effect = DragDropEffects.Copy;
+            }
+        }
+
+        private void StartToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            scaner.Check();
         }
     }
 }
