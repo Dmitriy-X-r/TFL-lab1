@@ -8,19 +8,21 @@ namespace TFL_lab1
 {
     internal enum StructScanEnum
     {
-        ERROR = 0,
+        ERROR = -1,
+        NONE = 0,
         OpenBracket = 1,
         CloseBracket = 2,
-        String = 3,
-        Сomma = 4,
-        True = 5,
-        False = 6,
-        Null = 7,
-        Define = 8,
-        Space = 9,
-        Int = 10,
-        Float = 11,
-        Minus = 12,
-        EndOperator = 13
+        Сomma = 3,
+        True = 4,
+        False = 5,
+        Null = 6,
+        Define = 7,
+        Space = 8,
+        Minus = 9,
+        EndOperator = 10,
+        Int = 11,
+        Float = 12,
+        String = 13
+
     }
 }

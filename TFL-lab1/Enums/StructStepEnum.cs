@@ -8,11 +8,12 @@ namespace TFL_lab1.Enums
 {
     internal enum StructStepEnum
     {
-        KeywordStructure = 0,
-        OpenBracket = 1,
-        KeywordType = 2,
-        Indentificatory = 3,
-        EndOperator = 4,
-        CloseBracket = 5
+        Search = 0,
+        KeywordStructure = 1,
+        OpenBracket = 2,
+        KeywordType = 3,
+        Indentificatory = 4,
+        EndOperator = 5,
+        CloseBracket = 6
     }
 }

@@ -33,6 +33,7 @@ namespace TFL_lab1
             file = new TFL_lab1.Сlasses.File(this);
             correction = new Correction(this);
             reference = new Reference();
+            scaner = new Scaner(this);
         }
 
         private void CreateToolStripMenuItem_Click(object sender, EventArgs e)
