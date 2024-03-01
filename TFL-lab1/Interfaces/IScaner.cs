@@ -12,6 +12,5 @@ namespace TFL_lab1.Interfaces
         void Scan();
         void Check();
         void Clear();
-        void Filter();
     }
 }

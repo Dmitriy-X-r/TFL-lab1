@@ -10,9 +10,9 @@ namespace TFL_lab1.Сlasses
 {
     internal class Scaner : IScaner
     {
-        internal struct Word
+        internal struct lexem
         {
-            internal Word(StructScanEnum StructScanEnum, string str, int start, int end)
+            internal lexem(StructScanEnum StructScanEnum, string str, int start, int end)
             {
                 this.StructScanEnum = StructScanEnum;
                 this.str = str;
@@ -54,17 +54,15 @@ namespace TFL_lab1.Сlasses
             _form = form;
         }
 
-        StructStepEnum _step = StructStepEnum.Search;
         public string buffer { get => _buffer; }
 
         public void Check()
         {
             Clear();
             Scan();
-            //Filter();
             CheckProcess();
         }
-        private Word GetNextWord()
+        private lexem GetNextWord()
         {
             int start = _curChr;
             while (_curChr < _buffer.Length && Char.IsLetterOrDigit(_buffer[_curChr]))
@@ -72,7 +70,7 @@ namespace TFL_lab1.Сlasses
             if (start == _curChr)
             {
                 if (_curChr == _buffer.Length)
-                    return new Word(StructScanEnum.NONE, "", start, _curChr);
+                    return new lexem(StructScanEnum.NONE, "", start, _curChr);
                 else
                     _curChr += 1;
             }
@@ -91,15 +89,15 @@ namespace TFL_lab1.Сlasses
                     }
                     else
                         _curColumn++;
-                    return new Word(StructScanEnum.Space, subString, start, end);
+                    return new lexem(StructScanEnum.Space, subString, start, end);
                 }
                 else
-                    return new Word(StructScanEnum.ERROR, subString, start, end);
+                    return new lexem(StructScanEnum.ERROR, subString, start, end);
             }
 
             if(subString == "\"" && !_searchPP)
             {
-                Word word = GetNextWord();
+                lexem word = GetNextWord();
                 _searchPP = true;
                 while(!(word.StructScanEnum == StructScanEnum.NONE) && word.str != "\"")
                     word = GetNextWord();
@@ -107,7 +105,7 @@ namespace TFL_lab1.Сlasses
                 if (word.StructScanEnum == StructScanEnum.ERROR)
                 {
                     subString = buffer.Substring(start, word.end - start);
-                    return new Word(StructScanEnum.String, subString, start, word.end);
+                    return new lexem(StructScanEnum.String, subString, start, word.end);
                 }
                 else
                     OutputError("Ожидается \"");
@@ -138,7 +136,7 @@ namespace TFL_lab1.Сlasses
                     _searcNum = true;
                     type = StructScanEnum.Float;
                     _curChr++;
-                    Word num = GetNextWord();
+                    lexem num = GetNextWord();
                     if(num.StructScanEnum!= StructScanEnum.Int)
                     {
                         subString += '.' + num.str;
@@ -150,29 +148,19 @@ namespace TFL_lab1.Сlasses
                     }
                 }
                 _searcNum = false;
-                return new Word(type, subString, start, end);
+                return new lexem(type, subString, start, end);
             }
 
             for (int i = 1; i < structScanDescription.GetLength(0)-3; i++)
             {
                 if (subString == structScanDescription[i, 1])
-                    return new Word((StructScanEnum)i, subString, start, end);
+                    return new lexem((StructScanEnum)i, subString, start, end);
             }
-            return new Word(StructScanEnum.ERROR, subString, start, end); // может не так
-        }
-        private void NextWordAndSkipSpace(ref Word word)
-        {
-            do
-            {
-                word = GetNextWord();
-                OutputResult(word);
-            } while (word.StructScanEnum == StructScanEnum.Space && (word.StructScanEnum != StructScanEnum.NONE || word.StructScanEnum == StructScanEnum.ERROR));
+            return new lexem(StructScanEnum.ERROR, subString, start, end); // может не так
         }
         private void CheckProcess()
         {
-            _step = StructStepEnum.Search;
-            int levelDeep = 0;
-            Word word;
+            lexem word;
             do
             {
                 word = GetNextWord();
@@ -182,7 +170,7 @@ namespace TFL_lab1.Сlasses
                 OutputError("Ошибка ликсемы - " + word.str);
         }
 
-        private void OutputResult(Word word)
+        private void OutputResult(lexem word)
         {
             if (word.StructScanEnum == StructScanEnum.ERROR || word.StructScanEnum == StructScanEnum.NONE)
                 return;
@@ -209,12 +197,6 @@ namespace TFL_lab1.Сlasses
             _curColumn = 0;
             _curChr = 0;
             _form.OutputTextBox.Clear();
-        }
-
-        public void Filter()
-        {
-            _buffer.Trim('\n');
-            _buffer.Trim('\t');
         }
 
         public void Scan()
