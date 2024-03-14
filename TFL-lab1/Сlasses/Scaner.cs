@@ -4,27 +4,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TFL_lab1.Interfaces;
-using TFL_lab1.Enums;
+using TFL_lab1.Сlasses;
 
 namespace TFL_lab1.Сlasses
 {
     internal class Scaner : IScaner
-    {
-        internal struct lexem
-        {
-            internal lexem(StructScanEnum StructScanEnum, string str, int start, int end)
-            {
-                this.StructScanEnum = StructScanEnum;
-                this.str = str;
-                this.start = start;
-                this.end = end;
-            }
-            internal StructScanEnum StructScanEnum;
-            internal string str;
-            internal int start;
-            internal int end;
-        }
-
+    {   
+        internal Lexem _lexem;
+        public Lexem lexem { get => _lexem; }
         FormCompiler _form;
         string _buffer;
         int _curLine = 0;
@@ -56,13 +43,17 @@ namespace TFL_lab1.Сlasses
 
         public string buffer { get => _buffer; }
 
+        public int curLine => _curLine;
+
+        public int curColumn => _curColumn;
+
         public void Check()
         {
             Clear();
             Scan();
             CheckProcess();
         }
-        private lexem GetNextWord()
+        private bool GetNextWord()
         {
             int start = _curChr;
             while (_curChr < _buffer.Length && Char.IsLetterOrDigit(_buffer[_curChr]))
@@ -70,7 +61,10 @@ namespace TFL_lab1.Сlasses
             if (start == _curChr)
             {
                 if (_curChr == _buffer.Length)
-                    return new lexem(StructScanEnum.NONE, "", start, _curChr);
+                {
+                    _lexem =  new Lexem(StructScanEnum.NONE, "", start, _curChr);
+                    return false;
+                }
                 else
                     _curChr += 1;
             }
@@ -89,100 +83,116 @@ namespace TFL_lab1.Сlasses
                     }
                     else
                         _curColumn++;
-                    return new lexem(StructScanEnum.Space, subString, start, end);
+                    _lexem = new Lexem(StructScanEnum.Space, subString, start, end);
+                    return true;
                 }
                 else
-                    return new lexem(StructScanEnum.ERROR, subString, start, end);
+                {
+                    _lexem = new Lexem(StructScanEnum.ERROR, subString, start, end);
+                    return false;
+                }
             }
 
             if(subString == "\"" && !_searchPP)
             {
-                lexem word = GetNextWord();
+                GetNextWord();
                 _searchPP = true;
-                while(!(word.StructScanEnum == StructScanEnum.NONE) && word.str != "\"")
-                    word = GetNextWord();
+                while(!(_lexem.StructScanEnum == StructScanEnum.NONE) && _lexem.str != "\"")
+                    GetNextWord();
                 _searchPP= false;
-                if (word.StructScanEnum == StructScanEnum.ERROR)
+                if (_lexem.StructScanEnum == StructScanEnum.ERROR)
                 {
-                    subString = buffer.Substring(start, word.end - start);
-                    return new lexem(StructScanEnum.String, subString, start, word.end);
+                    subString = buffer.Substring(start, _lexem.end - start);
+                    _lexem = new Lexem(StructScanEnum.String, subString, start, _lexem.end);
+                    return true;
                 }
                 else
+                {
                     OutputError("Ожидается \"");
+                    return false;
+                }
             }
 
             if (Char.IsNumber(subString[0]))
             {
-                //Word word = GetNextWord();
-                //bool point = false;
-                //while (!(word.StructScanEnum == StructScanEnum.NONE))
-                //    if (word.str == ".")
-                //    {
-                //        point = true;
-                //        break;
-                //        //error
-                //    }
-                //word = GetNextWord();
-                //if (word.StructScanEnum == StructScanEnum.ERROR)
-                //{
-                //    subString = buffer.Substring(start, word.end - start);
-                //    return new Word(StructScanEnum.Int, subString, start, word.end);
-                //}
-                //else
-                //    OutputError("Ожидается \"");
                 StructScanEnum type = StructScanEnum.Int;
                 if(_curChr < buffer.Length && _buffer[_curChr] == '.' && !_searcNum)
                 {
                     _searcNum = true;
                     type = StructScanEnum.Float;
                     _curChr++;
-                    lexem num = GetNextWord();
-                    if(num.StructScanEnum!= StructScanEnum.Int)
+                    GetNextWord();
+                    if (buffer[_curChr] == ')')
+                        _curChr--;
+                    if(_lexem.StructScanEnum!= StructScanEnum.Int)
                     {
-                        subString += '.' + num.str;
-                        end = num.end;
+                        if (_lexem.str != ")")
+                            subString += '.' + _lexem.str;
+                        else _curChr--;
+                        end = _lexem.end;
                     }
                     else 
                     {
-                        return num;
+                        return true;
                     }
                 }
                 _searcNum = false;
-                return new lexem(type, subString, start, end);
+                _lexem = new Lexem(type, subString, start, end);
+                return true;
             }
 
             for (int i = 1; i < structScanDescription.GetLength(0)-3; i++)
             {
                 if (subString == structScanDescription[i, 1])
-                    return new lexem((StructScanEnum)i, subString, start, end);
+                {
+                    _lexem = new Lexem((StructScanEnum)i, subString, start, end);
+                    return true;
+                }
             }
-            return new lexem(StructScanEnum.ERROR, subString, start, end); // может не так
+            _lexem = new Lexem(StructScanEnum.ERROR, subString, start, end); // может не так
+            return false;
         }
-        private void CheckProcess()
+        public bool CheckProcess()
         {
-            lexem word;
             do
             {
-                word = GetNextWord();
-                OutputResult(word);
-            } while (word.StructScanEnum != StructScanEnum.NONE && word.StructScanEnum != StructScanEnum.ERROR);
-            if (word.StructScanEnum == StructScanEnum.ERROR)
-                OutputError("Ошибка ликсемы - " + word.str);
+                GetNextWord();
+                OutputResult();
+            } while (_lexem.StructScanEnum != StructScanEnum.NONE && _lexem.StructScanEnum != StructScanEnum.ERROR);
+            if (_lexem.StructScanEnum == StructScanEnum.ERROR)
+            {
+               // OutputError("Ошибка ликсемы - " + _lexem.str);
+                return false;
+            }
+            return true;
         }
 
-        private void OutputResult(lexem word)
+        public bool NextWordAndSkipSpace()
         {
-            if (word.StructScanEnum == StructScanEnum.ERROR || word.StructScanEnum == StructScanEnum.NONE)
+            do
+            {
+                GetNextWord();
+                if (_lexem.StructScanEnum == StructScanEnum.NONE)
+                    return false;
+                else if (_lexem.StructScanEnum != StructScanEnum.Space || _lexem.StructScanEnum == StructScanEnum.ERROR)
+                    return true;
+            } while (true);
+        }
+
+
+        private void OutputResult()
+        {
+            if (_lexem.StructScanEnum == StructScanEnum.ERROR || _lexem.StructScanEnum == StructScanEnum.NONE)
                 return;
             if (_form.OutputTextBox.Text.Length > 0)
                 _form.OutputTextBox.AppendText("\n");
-            if (word.str == " ")
-                word.str = "(пробел)";
-            else if (word.str == "\n")
-                word.str = "(конец строки)";
-            else if (word.str == "\t")
-                word.str = "(табуляция)";
-            _form.OutputTextBox.AppendText($"{(int)word.StructScanEnum} - {structScanDescription[(int)word.StructScanEnum, 0]} - {word.str} - c {word.start} по {word.end} символ");
+            if (_lexem.str == " ")
+                _lexem.str = "(пробел)";
+            else if (_lexem.str == "\n")
+                _lexem.str = "(конец строки)";
+            else if (_lexem.str == "\t")
+                _lexem.str = "(табуляция)";
+            _form.OutputTextBox.AppendText($"{(int)_lexem.StructScanEnum} - {structScanDescription[(int)_lexem.StructScanEnum, 0]} - {_lexem.str} - c {_lexem.start} по {_lexem.end} символ");
         }
 
         private void OutputError(string massage)

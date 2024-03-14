@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TFL_lab1
+namespace TFL_lab1.Сlasses
 {
     internal enum StructScanEnum
     {

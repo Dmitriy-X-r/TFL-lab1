@@ -27,6 +27,10 @@ namespace TFL_lab1
         IScaner scaner;
         internal IScaner Scaner { get => scaner; }
 
+        IParser parser;
+        internal IParser Parser { get => parser; }
+
+
         public FormCompiler()
         {
             InitializeComponent();
@@ -34,6 +38,7 @@ namespace TFL_lab1
             correction = new Correction(this);
             reference = new Reference();
             scaner = new Scaner(this);
+            parser = new Parser(scaner, OutputTextBox);
         }
 
         private void CreateToolStripMenuItem_Click(object sender, EventArgs e)
@@ -130,7 +135,7 @@ namespace TFL_lab1
 
         private void StartToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            scaner.Check();
+            parser.Parse();
         }
     }
 }

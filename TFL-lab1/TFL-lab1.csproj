@@ -46,7 +46,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Enums\StructStepEnum.cs" />
+    <Compile Include="Interfaces\IParser.cs" />
+    <Compile Include="Сlasses\Parser.cs" />
     <Compile Include="FormAboutProgram.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -74,6 +75,7 @@
     <Compile Include="Enums\StructScanEnum.cs" />
     <Compile Include="Сlasses\Correction.cs" />
     <Compile Include="Сlasses\File.cs" />
+    <Compile Include="Сlasses\PhpConstant.cs" />
     <Compile Include="Сlasses\Reference.cs" />
     <Compile Include="Сlasses\Scaner.cs" />
     <EmbeddedResource Include="FormAboutProgram.resx">
